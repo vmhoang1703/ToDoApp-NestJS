@@ -12,7 +12,7 @@ const TaskForm = () => {
   const addTask = async () => {
     if (!newTask.trim()) return;
     try {
-      await axios.post(API_URL, { title: newTask });
+      await axios.post(API_URL, { title: newTask, isCompleted: false });
       setNewTask("");
     } catch (error) {
       console.error("Error adding task:", error);

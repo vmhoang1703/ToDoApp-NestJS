@@ -1,15 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { List, ListItem, ListItemText } from "@mui/material";
+import { Checkbox, List, ListItem, ListItemText } from "@mui/material";
 import axios from "axios";
 
 const API_URL = "http://localhost:3000/tasks";
 
 interface Task {
-  id: string;
+  _id: string;
   title: string;
-  description: string;
+  isCompleted: boolean;
 }
 
 const TaskList = () => {
@@ -22,19 +22,18 @@ const TaskList = () => {
   const fetchTasks = async () => {
     try {
       const response = await axios.get(API_URL);
-      console.log(response);
       setTasks(response.data);
     } catch (error) {
       console.error("Error fetching tasks:", error);
     }
   };
 
-  const toggleTask = async (id: string, completed: boolean) => {
+  const toggleTask = async (_id: string, isCompleted: boolean) => {
     try {
-      await axios.put(`${API_URL}/${id}`, { completed: !completed });
+      await axios.put(`${API_URL}/${_id}`, { isCompleted: !isCompleted });
       setTasks(
         tasks.map((task) =>
-          task.id === id ? { ...task, completed: !completed } : task
+          task._id === _id ? { ...task, isCompleted: !isCompleted } : task
         )
       );
     } catch (error) {
@@ -45,8 +44,15 @@ const TaskList = () => {
   return (
     <List>
       {tasks.map((task) => (
-        <ListItem key={task.id} disablePadding>
-          <ListItemText primary={task.title} />
+        <ListItem key={task._id} disablePadding>
+          <Checkbox
+            checked={task.isCompleted}
+            onChange={() => toggleTask(task._id, task.isCompleted)}
+          />
+          <ListItemText
+            primary={task.title}
+            style={{ textDecoration: task.isCompleted ? "line-through" : "none" }}
+          />
         </ListItem>
       ))}
     </List>
