@@ -1,16 +1,20 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Checkbox, List, ListItem, ListItemText } from "@mui/material";
+import {
+  Checkbox,
+  Container,
+  Divider,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
+import Task from "../interfaces/Task";
 
 const API_URL = "http://localhost:3000/tasks";
-
-interface Task {
-  _id: string;
-  title: string;
-  isCompleted: boolean;
-}
 
 const TaskList = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -44,16 +48,29 @@ const TaskList = () => {
   return (
     <List>
       {tasks.map((task) => (
-        <ListItem key={task._id} disablePadding>
-          <Checkbox
-            checked={task.isCompleted}
-            onChange={() => toggleTask(task._id, task.isCompleted)}
-          />
-          <ListItemText
-            primary={task.title}
-            style={{ textDecoration: task.isCompleted ? "line-through" : "none" }}
-          />
-        </ListItem>
+        <Container maxWidth="xl"> 
+          <ListItem
+            key={task._id}
+            disablePadding
+            secondaryAction={
+              <IconButton edge="end" aria-label="delete">
+                <DeleteIcon />
+              </IconButton>
+            }
+          >
+            <Checkbox
+              checked={task.isCompleted}
+              onChange={() => toggleTask(task._id, task.isCompleted)}
+            />
+            <ListItemText
+              primary={task.title}
+              style={{
+                textDecoration: task.isCompleted ? "line-through" : "none",
+              }}
+            />
+          </ListItem>
+          <Divider />
+        </Container>
       ))}
     </List>
   );

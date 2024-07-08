@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { TextField, Button } from "@mui/material";
+import { TextField, Button, Container } from "@mui/material";
 import axios from "axios";
 
 const API_URL = "http://localhost:3000/tasks";
@@ -20,11 +20,12 @@ const TaskForm = () => {
   };
 
   return (
-    <>
+    <Container maxWidth="xl" sx={{ marginBottom: "25px" }}>
       <TextField
-        fullWidth
+        id="outlined-basic"
+        label="Add a new task"
         variant="outlined"
-        placeholder="Add a new task"
+        fullWidth
         value={newTask}
         onChange={(e) => setNewTask(e.target.value)}
         onKeyPress={(e) => e.key === "Enter" && addTask()}
@@ -33,12 +34,18 @@ const TaskForm = () => {
         variant="contained"
         color="primary"
         onClick={addTask}
-        style={{ marginTop: "10px" }}
+        style={styles.button}
       >
         Add Task
       </Button>
-    </>
+    </Container>
   );
+};
+
+const styles = {
+  button: {
+    marginTop: "10px",
+  },
 };
 
 export default TaskForm;
