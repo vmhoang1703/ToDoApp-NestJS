@@ -19,7 +19,13 @@ export class TasksService {
   }
 
   async update(id: string, updateTaskDto: UpdateTaskDto): Promise<Task> {
-    const updateTask = await this.taskModel.findByIdAndUpdate(id, updateTaskDto, {new: true}).exec();
+    const updateTask = await this.taskModel
+      .findByIdAndUpdate(id, updateTaskDto, { new: true })
+      .exec();
     return updateTask;
+  }
+
+  async delete(id: string): Promise<Task> {
+    return this.taskModel.findByIdAndDelete(id).exec();
   }
 }

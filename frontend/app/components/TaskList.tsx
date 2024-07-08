@@ -45,15 +45,27 @@ const TaskList = () => {
     }
   };
 
+  const deleteTask = async (_id: string) => {
+    try {
+      await axios.delete(`${API_URL}/${_id}`);
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
+  };
+
   return (
     <List>
-      {tasks.map((task) => (
-        <Container maxWidth="xl"> 
+      <Container maxWidth="xl">
+        {tasks.map((task) => (
           <ListItem
             key={task._id}
             disablePadding
             secondaryAction={
-              <IconButton edge="end" aria-label="delete">
+              <IconButton
+                edge="end"
+                aria-label="delete"
+                onClick={() => deleteTask(task._id)}
+              >
                 <DeleteIcon />
               </IconButton>
             }
@@ -69,9 +81,9 @@ const TaskList = () => {
               }}
             />
           </ListItem>
-          <Divider />
-        </Container>
-      ))}
+        ))}
+        <Divider />
+      </Container>
     </List>
   );
 };

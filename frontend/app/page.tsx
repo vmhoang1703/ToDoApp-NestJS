@@ -21,6 +21,7 @@ export default function Home() {
           width={120}
           height={100}
           style={{ marginBottom: "10px" }}
+          priority
         />
         <Typography variant="h4" fontWeight={700} gutterBottom>
           TODO APP
