@@ -57,32 +57,34 @@ const TaskList = () => {
     <List>
       <Container maxWidth="xl">
         {tasks.map((task) => (
-          <ListItem
-            key={task._id}
-            disablePadding
-            secondaryAction={
-              <IconButton
-                edge="end"
-                aria-label="delete"
-                onClick={() => deleteTask(task._id)}
-              >
-                <DeleteIcon />
-              </IconButton>
-            }
-          >
-            <Checkbox
-              checked={task.isCompleted}
-              onChange={() => toggleTask(task._id, task.isCompleted)}
-            />
-            <ListItemText
-              primary={task.title}
-              style={{
-                textDecoration: task.isCompleted ? "line-through" : "none",
-              }}
-            />
-          </ListItem>
+          <>
+            <ListItem
+              key={task._id}
+              disablePadding
+              secondaryAction={
+                <IconButton
+                  edge="end"
+                  aria-label="delete"
+                  onClick={() => deleteTask(task._id)}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              }
+            >
+              <Checkbox
+                checked={task.isCompleted}
+                onChange={() => toggleTask(task._id, task.isCompleted)}
+              />
+              <ListItemText
+                primary={task.title}
+                style={{
+                  textDecoration: task.isCompleted ? "line-through" : "none",
+                }}
+              />
+            </ListItem>
+            <Divider />
+          </>
         ))}
-        <Divider />
       </Container>
     </List>
   );
