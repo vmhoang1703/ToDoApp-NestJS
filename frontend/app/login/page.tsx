@@ -14,6 +14,8 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { FormEvent } from "react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
 function Copyright(props: any) {
   return (
@@ -36,14 +38,30 @@ function Copyright(props: any) {
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
+const API_URL = "http://localhost:3000/auth/login";
+
 export default function SignIn() {
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const router = useRouter();
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+
+    try {
+      await axios
+        .post(API_URL, {
+          username: data.get("username"),
+          password: data.get("password"),
+        })
+        .then((response) => {
+          router.push("/");
+        })
+        .catch((error) => {
+          console.error("Login unsuccessfully");
+        });
+    } catch (error) {
+      console.error("Login unsuccessfully");
+    }
   };
 
   return (
@@ -74,10 +92,10 @@ export default function SignIn() {
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              id="username"
+              label="Username Address"
+              name="username"
+              autoComplete="username"
               autoFocus
             />
             <TextField

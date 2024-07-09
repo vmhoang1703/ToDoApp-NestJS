@@ -53,15 +53,12 @@ export default function SignUp() {
           username: data.get("username"),
           password: data.get("password"),
         })
-        .then(function (response) {
-          console.log("User created successfully:", response.data);
+        .then((response) => {
+          console.log("User created successfully:");
           router.push("/login");
         })
-        .catch(function (error) {
-          console.error(
-            "Error creating user:",
-            error.response ? error.response.data : error.message
-          );
+        .catch((error) => {
+          console.error("Error creating user:");
         });
     } catch (error) {
       console.error("Unexpected error creating user:", error);
