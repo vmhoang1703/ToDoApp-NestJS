@@ -17,7 +17,7 @@ import { FormEvent } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
-function Copyright(props: any) {
+const Copyright = (props: any) => {
   return (
     <Typography
       variant="body2"
@@ -33,14 +33,14 @@ function Copyright(props: any) {
       {"."}
     </Typography>
   );
-}
+};
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
 const API_URL = "http://localhost:3000/auth/register";
 
-export default function SignUp() {
+const SignUp = () => {
   const router = useRouter();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -141,4 +141,6 @@ export default function SignUp() {
       </Container>
     </ThemeProvider>
   );
-}
+};
+
+export default SignUp;

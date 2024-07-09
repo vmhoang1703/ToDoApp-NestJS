@@ -17,8 +17,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { MouseEvent, useState } from "react";
 
-const settings = ["Profile", "Logout"];
-
 const MainBar = ({
   isLoggedIn,
   onLogout,
@@ -28,6 +26,7 @@ const MainBar = ({
 }) => {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+  const route = useRouter();
 
   const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -44,7 +43,11 @@ const MainBar = ({
   const handleLogout = () => {
     onLogout();
   };
-  
+
+  const handleProfile = () => {
+    route.push("/profile");
+  };
+
   return (
     <AppBar>
       <Container maxWidth="xl">
@@ -136,16 +139,12 @@ const MainBar = ({
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {settings.map((setting) => (
-                  <MenuItem
-                    key={setting}
-                    onClick={
-                      setting === "Logout" ? handleLogout : handleCloseUserMenu
-                    }
-                  >
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
-                ))}
+                <MenuItem onClick={handleProfile}>
+                  <Typography textAlign="center">Profile</Typography>
+                </MenuItem>
+                <MenuItem onClick={handleLogout}>
+                  <Typography textAlign="center">Logout</Typography>
+                </MenuItem>
               </Menu>
             </Box>
           )}

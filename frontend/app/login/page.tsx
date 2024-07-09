@@ -17,7 +17,7 @@ import { FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
-function Copyright(props: any) {
+const Copyright = (props: any) => {
   return (
     <Typography
       variant="body2"
@@ -40,7 +40,7 @@ const defaultTheme = createTheme();
 
 const API_URL = "http://localhost:3000/auth/login";
 
-export default function SignIn() {
+const SignIn = () => {
   const router = useRouter();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -139,4 +139,6 @@ export default function SignIn() {
       </Container>
     </ThemeProvider>
   );
-}
+};
+
+export default SignIn;
