@@ -54,6 +54,7 @@ export default function SignIn() {
           password: data.get("password"),
         })
         .then((response) => {
+          localStorage.setItem("access_token", response.data.access_token);
           router.push("/");
         })
         .catch((error) => {
