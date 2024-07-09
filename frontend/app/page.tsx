@@ -57,10 +57,12 @@ export default function Home() {
   return (
     <div>
       <MainBar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
-      <Container maxWidth="sm" sx={{ marginTop: 15 }}>
-        <TaskForm />
-        <TaskList />
-      </Container>
+      {isLoggedIn ? (
+        <Container maxWidth="sm" sx={{ marginTop: 15 }}>
+          <TaskForm />
+          <TaskList />
+        </Container>
+      ) : null}
     </div>
   );
 }
