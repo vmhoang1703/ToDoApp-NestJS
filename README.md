@@ -5,8 +5,8 @@ This project is a full-stack Todo application built with NestJS (backend), NextJ
 ## Features
 
 - Create, read, update, and delete todo items
+- SignIn/SignUp with `JWT` for getting access_token and hash password by `bcrypt`
 - Mark todos as complete/incomplete
-- Filter todos by status
 - Responsive design using Material-UI
 
 ## Tech Stack
