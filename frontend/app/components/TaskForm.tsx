@@ -3,22 +3,26 @@
 import { useState } from "react";
 import { TextField, Button, Container } from "@mui/material";
 import axios from "axios";
-import { useRouter } from "next/navigation";
 
 const API_URL = "http://localhost:3000/tasks";
 
 const TaskForm = () => {
   const [newTask, setNewTask] = useState("");
-  const route = useRouter();
 
   const addTask = async () => {
-    if (!newTask.trim()) return;
+    const taskTitle = newTask.trim();
+    if (!taskTitle) return;
+
     try {
-      await axios.post(API_URL, { title: newTask, isCompleted: false });
+      await axios.post(API_URL, { title: taskTitle, isCompleted: false });
       setNewTask("");
     } catch (error) {
       console.error("Error adding task:", error);
     }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Enter") addTask();
   };
 
   return (
@@ -30,24 +34,19 @@ const TaskForm = () => {
         fullWidth
         value={newTask}
         onChange={(e) => setNewTask(e.target.value)}
-        onKeyPress={(e) => e.key === "Enter" && addTask()}
+        onKeyPress={handleKeyPress}
+        sx={{ mb: 2 }}
       />
       <Button
         variant="contained"
         color="primary"
         onClick={addTask}
-        style={styles.button}
+        sx={{ marginTop: "10px" }}
       >
         Add Task
       </Button>
     </Container>
   );
-};
-
-const styles = {
-  button: {
-    marginTop: "10px",
-  },
 };
 
 export default TaskForm;

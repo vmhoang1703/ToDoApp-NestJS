@@ -17,13 +17,12 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { MouseEvent, useState } from "react";
 
-const MainBar = ({
-  isLoggedIn,
-  onLogout,
-}: {
+interface MainBarProps {
   isLoggedIn: boolean;
   onLogout: () => void;
-}) => {
+}
+
+const MainBar = ({ isLoggedIn, onLogout }: MainBarProps) => {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const route = useRouter();
@@ -52,6 +51,11 @@ const MainBar = ({
     route.push("/profile");
   };
 
+  const navButtons = [
+    { text: "Sign Up", route: "/register" },
+    { text: "Sign In", route: "/login" },
+  ];
+
   return (
     <AppBar sx={{ backgroundColor: "#fff" }}>
       <Container maxWidth="xl">
@@ -63,14 +67,10 @@ const MainBar = ({
               alignItems: "center",
             }}
           >
-            <Button
-              onClick={() => {
-                route.push("/");
-              }}
-            >
+            <Button onClick={() => route.push("/")}>
               <Image
-                src={"/logo.png"}
-                alt={"Todo App Logo"}
+                src="/logo.png"
+                alt="Todo App Logo"
                 width={60}
                 height={50}
                 priority
@@ -81,7 +81,7 @@ const MainBar = ({
                 component="a"
                 sx={{
                   ml: 2,
-                  display: { xs: "none", md: "flex" },
+                  display: { xs: "flex", md: "flex" },
                   fontFamily: "monospace",
                   fontWeight: 700,
                   letterSpacing: ".2rem",
@@ -93,46 +93,19 @@ const MainBar = ({
               </Typography>
             </Button>
           </Box>
-          {!isLoggedIn ? (
-            <Typography
-              variant="h5"
-              noWrap
-              component="a"
-              href="#app-bar-with-responsive-menu"
-              sx={{
-                mr: 2,
-                display: { xs: "flex", md: "none" },
-                flexGrow: 1,
-                fontFamily: "monospace",
-                fontWeight: 700,
-                letterSpacing: ".3rem",
-                color: "inherit",
-                textDecoration: "none",
-              }}
-            >
-              TODO APP
-            </Typography>
-          ) : null}
-          <Box sx={{ flexGrow: 1 }}></Box>
+          <Box sx={{ flexGrow: 1 }} />
 
           {!isLoggedIn ? (
             <Box sx={{ flexGrow: 0 }}>
-              <Button
-                sx={{ color: "#000" }}
-                onClick={() => {
-                  route.push("/register");
-                }}
-              >
-                Sign Up
-              </Button>
-              <Button
-                sx={{ color: "#000" }}
-                onClick={() => {
-                  route.push("/login");
-                }}
-              >
-                Sign In
-              </Button>
+              {navButtons.map((button, index) => (
+                <Button
+                  key={index}
+                  sx={{ color: "#000" }}
+                  onClick={() => route.push(button.route)}
+                >
+                  {button.text}
+                </Button>
+              ))}
             </Box>
           ) : (
             <Box sx={{ flexGrow: 0 }}>
@@ -145,15 +118,9 @@ const MainBar = ({
                 sx={{ mt: "45px" }}
                 id="menu-appbar"
                 anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
                 keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
+                transformOrigin={{ vertical: "top", horizontal: "right" }}
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >

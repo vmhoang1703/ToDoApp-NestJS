@@ -28,19 +28,19 @@ const TaskList = () => {
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.get(API_URL);
-      setTasks(response.data);
+      const { data } = await axios.get(API_URL);
+      setTasks(data);
     } catch (error) {
       console.error("Error fetching tasks:", error);
     }
   };
 
-  const toggleTask = async (_id: string, isCompleted: boolean) => {
+  const toggleTask = async (id: string, isCompleted: boolean) => {
     try {
-      await axios.put(`${API_URL}/${_id}`, { isCompleted: !isCompleted });
-      setTasks(
-        tasks.map((task) =>
-          task._id === _id ? { ...task, isCompleted: !isCompleted } : task
+      await axios.put(`${API_URL}/${id}`, { isCompleted: !isCompleted });
+      setTasks((prevTasks) =>
+        prevTasks.map((task) =>
+          task._id === id ? { ...task, isCompleted: !isCompleted } : task
         )
       );
     } catch (error) {
@@ -48,18 +48,18 @@ const TaskList = () => {
     }
   };
 
-  const deleteTask = async (_id: string) => {
+  const deleteTask = async (id: string) => {
     try {
-      await axios.delete(`${API_URL}/${_id}`);
-      setTasks(tasks.filter((task) => task._id !== _id));
+      await axios.delete(`${API_URL}/${id}`);
+      setTasks((prevTasks) => prevTasks.filter((task) => task._id !== id));
     } catch (error) {
       console.error("Error deleting task:", error);
     }
   };
 
   return (
-    <List>
-      <Container maxWidth="xl">
+    <Container maxWidth="xl">
+      <List>
         {tasks.map((task) => (
           <div key={task._id}>
             <ListItem
@@ -80,7 +80,7 @@ const TaskList = () => {
               />
               <ListItemText
                 primary={task.title}
-                style={{
+                sx={{
                   textDecoration: task.isCompleted ? "line-through" : "none",
                 }}
               />
@@ -88,8 +88,8 @@ const TaskList = () => {
             <Divider />
           </div>
         ))}
-      </Container>
-    </List>
+      </List>
+    </Container>
   );
 };
 

@@ -1,17 +1,20 @@
 "use client";
 
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import {
+  Avatar,
+  Button,
+  CssBaseline,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  Grid,
+  Box,
+  Typography,
+  Container,
+  createTheme,
+  ThemeProvider,
+} from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
@@ -29,20 +32,14 @@ const SignIn = () => {
     const data = new FormData(event.currentTarget);
 
     try {
-      await axios
-        .post(API_URL, {
-          username: data.get("username"),
-          password: data.get("password"),
-        })
-        .then((response) => {
-          localStorage.setItem("access_token", response.data.access_token);
-          router.push("/");
-        })
-        .catch((error) => {
-          console.error("Login unsuccessfully");
-        });
+      const response = await axios.post(API_URL, {
+        username: data.get("username"),
+        password: data.get("password"),
+      });
+      localStorage.setItem("access_token", response.data.access_token);
+      router.push("/");
     } catch (error) {
-      console.error("Login unsuccessfully");
+      console.error("Login unsuccessful", error);
     }
   };
 
@@ -64,18 +61,13 @@ const SignIn = () => {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
-          >
+          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
               fullWidth
               id="username"
-              label="Username Address"
+              label="Username"
               name="username"
               autoComplete="username"
               autoFocus
@@ -94,28 +86,17 @@ const SignIn = () => {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
               Sign In
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link
-                  href="#"
-                  style={{ textDecoration: "none", fontSize: "15px" }}
-                >
+                <Link href="#" passHref style={{ textDecoration: "none", fontSize: "15px" }}>
                   Forgot password?
                 </Link>
               </Grid>
               <Grid item>
-                <Link
-                  href="/register"
-                  style={{ textDecoration: "none", fontSize: "15px" }}
-                >
+                <Link href="/register" passHref style={{ textDecoration: "none", fontSize: "15px" }}>
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
