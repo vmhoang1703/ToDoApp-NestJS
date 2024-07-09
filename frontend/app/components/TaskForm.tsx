@@ -3,11 +3,13 @@
 import { useState } from "react";
 import { TextField, Button, Container } from "@mui/material";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const API_URL = "http://localhost:3000/tasks";
 
 const TaskForm = () => {
   const [newTask, setNewTask] = useState("");
+  const route = useRouter();
 
   const addTask = async () => {
     if (!newTask.trim()) return;

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import {
+  Button,
   Checkbox,
   Container,
   Divider,
@@ -13,11 +14,13 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import Task from "../interfaces/Task";
+import { useRouter } from "next/navigation";
 
 const API_URL = "http://localhost:3000/tasks";
 
 const TaskList = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const route = useRouter();
 
   useEffect(() => {
     fetchTasks();
@@ -48,6 +51,7 @@ const TaskList = () => {
   const deleteTask = async (_id: string) => {
     try {
       await axios.delete(`${API_URL}/${_id}`);
+      setTasks(tasks.filter((task) => task._id !== _id));
     } catch (error) {
       console.error("Error deleting task:", error);
     }
@@ -57,9 +61,8 @@ const TaskList = () => {
     <List>
       <Container maxWidth="xl">
         {tasks.map((task) => (
-          <>
+          <div key={task._id}>
             <ListItem
-              key={task._id}
               disablePadding
               secondaryAction={
                 <IconButton
@@ -83,7 +86,7 @@ const TaskList = () => {
               />
             </ListItem>
             <Divider />
-          </>
+          </div>
         ))}
       </Container>
     </List>

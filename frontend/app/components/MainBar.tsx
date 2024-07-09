@@ -36,6 +36,10 @@ const MainBar = ({
     setAnchorElUser(event.currentTarget);
   };
 
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
+
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
@@ -49,7 +53,7 @@ const MainBar = ({
   };
 
   return (
-    <AppBar>
+    <AppBar sx={{ backgroundColor: "#fff" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Box
@@ -59,31 +63,35 @@ const MainBar = ({
               alignItems: "center",
             }}
           >
-            <Image
-              src={"/logo.png"}
-              alt={"Todo App Logo"}
-              width={60}
-              height={50}
-              priority
-            />
-            <Typography
-              variant="h6"
-              noWrap
-              component="a"
-              href="/"
-              sx={{
-                ml: 2,
-                mr: 4,
-                display: { xs: "none", md: "flex" },
-                fontFamily: "monospace",
-                fontWeight: 700,
-                letterSpacing: ".2rem",
-                color: "inherit",
-                textDecoration: "none",
+            <Button
+              onClick={() => {
+                route.push("/");
               }}
             >
-              TODO APP
-            </Typography>
+              <Image
+                src={"/logo.png"}
+                alt={"Todo App Logo"}
+                width={60}
+                height={50}
+                priority
+              />
+              <Typography
+                variant="h6"
+                noWrap
+                component="a"
+                sx={{
+                  ml: 2,
+                  display: { xs: "none", md: "flex" },
+                  fontFamily: "monospace",
+                  fontWeight: 700,
+                  letterSpacing: ".2rem",
+                  color: "#000",
+                  textDecoration: "none",
+                }}
+              >
+                TODO APP
+              </Typography>
+            </Button>
           </Box>
           {!isLoggedIn ? (
             <Typography
@@ -109,10 +117,20 @@ const MainBar = ({
 
           {!isLoggedIn ? (
             <Box sx={{ flexGrow: 0 }}>
-              <Button color="inherit" href="/register">
+              <Button
+                sx={{ color: "#000" }}
+                onClick={() => {
+                  route.push("/register");
+                }}
+              >
                 Sign Up
               </Button>
-              <Button color="inherit" href="/login">
+              <Button
+                sx={{ color: "#000" }}
+                onClick={() => {
+                  route.push("/login");
+                }}
+              >
                 Sign In
               </Button>
             </Box>
