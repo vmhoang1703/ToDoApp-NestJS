@@ -8,6 +8,7 @@ import MainBar from "./components/MainBar";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import AddButton from "./components/AddButton";
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -58,8 +59,8 @@ export default function Home() {
     <div>
       <MainBar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
       {isLoggedIn ? (
-        <Container maxWidth="sm" sx={{ marginTop: 15 }}>
-          <TaskForm />
+        <Container maxWidth="xl" sx={{ mt: 12 }}>
+          <AddButton />
           <TaskList />
         </Container>
       ) : null}
