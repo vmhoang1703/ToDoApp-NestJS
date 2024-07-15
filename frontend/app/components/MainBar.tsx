@@ -15,14 +15,14 @@ import {
 } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { MouseEvent, useState } from "react";
+import { FC, MouseEvent, useState } from "react";
 
 interface MainBarProps {
   isLoggedIn: boolean;
   onLogout: () => void;
 }
 
-const MainBar = ({ isLoggedIn, onLogout }: MainBarProps) => {
+const MainBar: FC<MainBarProps> = ({ isLoggedIn, onLogout }) => {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const route = useRouter();

@@ -3,6 +3,10 @@
 import { useState, useEffect } from "react";
 import {
   Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardMedia,
   Checkbox,
   Container,
   Divider,
@@ -10,6 +14,7 @@ import {
   List,
   ListItem,
   ListItemText,
+  Typography,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
@@ -58,8 +63,40 @@ const TaskList = () => {
   };
 
   return (
-    <Container maxWidth="xl">
-      <List>
+    <Container
+      maxWidth="xl"
+      sx={{ my: 5, display: "flex", flexDirection: "row" }}
+    >
+      {tasks.map((task, index) => (
+        <Card key={task._id} sx={{ minWidth: 300, mr: 3 }}>
+          <CardContent>
+            <Typography
+              gutterBottom
+              variant="h5"
+              component="div"
+              sx={{
+                textDecoration: task.isCompleted ? "line-through" : "none",
+              }}
+            >
+              {++index}. {task.title}
+            </Typography>
+          </CardContent>
+          <CardActions>
+            <Checkbox
+              checked={task.isCompleted}
+              onChange={() => toggleTask(task._id, task.isCompleted)}
+            />
+            <IconButton
+              edge="end"
+              aria-label="delete"
+              onClick={() => deleteTask(task._id)}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </CardActions>
+        </Card>
+      ))}
+      {/* <List>
         {tasks.map((task) => (
           <div key={task._id}>
             <ListItem
@@ -88,7 +125,7 @@ const TaskList = () => {
             <Divider />
           </div>
         ))}
-      </List>
+      </List> */}
     </Container>
   );
 };

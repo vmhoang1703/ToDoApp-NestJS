@@ -20,7 +20,7 @@ const AddButton = () => {
       </Fab>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Subscribe</DialogTitle>
-        <TaskForm />
+        <TaskForm handleClose={handleClose}/>
       </Dialog>
     </Fragment>
   );

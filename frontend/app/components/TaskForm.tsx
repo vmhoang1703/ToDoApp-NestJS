@@ -1,12 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { FC, useState } from "react";
 import { TextField, Button, Container } from "@mui/material";
 import axios from "axios";
 
 const API_URL = "http://localhost:3000/tasks";
 
-const TaskForm = () => {
+interface TaskFormProps {
+  handleClose: () => void;
+}
+
+const TaskForm: FC<TaskFormProps> = ({ handleClose }) => {
   const [newTask, setNewTask] = useState("");
 
   const addTask = async () => {
@@ -16,6 +20,7 @@ const TaskForm = () => {
     try {
       await axios.post(API_URL, { title: taskTitle, isCompleted: false });
       setNewTask("");
+      handleClose();
     } catch (error) {
       console.error("Error adding task:", error);
     }
