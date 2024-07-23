@@ -16,44 +16,49 @@ export class AuthService {
   ) {}
 
   async onModuleInit() {
-    this.userClient.subscribeToResponseOf('get_user');
-    this.userClient.subscribeToResponseOf('user_created');
+    this.userClient.subscribeToResponseOf('user.getProfile');
+    this.userClient.subscribeToResponseOf('user.create');
     await this.userClient.connect();
   }
 
   async login(data: { username: string; password: string }): Promise<any> {
-    this.userClient.send('get_user', data.username).subscribe(async (user) => {
-      const isMatch = await bcrypt.compare(data.password, user.password);
-      if (!isMatch) {
-        throw new UnauthorizedException();
-      }
-      const payload = { sub: user.userId, username: user.username };
-      return {
-        access_token: await this.jwtService.signAsync(payload),
-      };
-    });
+    this.userClient
+      .send('user.getProfile', data.username)
+      .subscribe(async (user) => {
+        const isMatch = await bcrypt.compare(data.password, user.password);
+        if (!isMatch) {
+          throw new UnauthorizedException();
+        }
+        const payload = { sub: user.userId, username: user.username };
+        return {
+          access_token: await this.jwtService.signAsync(payload),
+        };
+      });
   }
 
   async register(data: { username: string; password: string }) {
     const saltOrRounds = 10;
-    this.userClient.send('get_user', data.username).subscribe(async (user) => {
-      if (user) {
-        throw new ConflictException('Account already exists.');
-      } else {
-        const passwordHashed = await bcrypt.hash(data.password, saltOrRounds);
-        this.userClient
-          .send('user_created', {
-            username: data.username,
-            password: passwordHashed,
-          })
-          .subscribe(async (userCreated) => {
-            console.log(userCreated);
-            return {
-              message: 'Congratulation! Account has been created successfully.',
-            };
-          });
-      }
-    });
+    this.userClient
+      .send('user.getProfile', data.username)
+      .subscribe(async (user) => {
+        if (user) {
+          throw new ConflictException('Account already exists.');
+        } else {
+          const passwordHashed = await bcrypt.hash(data.password, saltOrRounds);
+          this.userClient
+            .send('user.create', {
+              username: data.username,
+              password: passwordHashed,
+            })
+            .subscribe(async (userCreated) => {
+              console.log(userCreated);
+              return {
+                message:
+                  'Congratulation! Account has been created successfully.',
+              };
+            });
+        }
+      });
   }
 
   async verify(token: string) {

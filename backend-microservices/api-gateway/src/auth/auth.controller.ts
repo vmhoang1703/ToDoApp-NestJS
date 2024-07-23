@@ -9,11 +9,11 @@ export class AuthController {
 
   @Post('login')
   async login(@Body() loginDto: any) {
-    return this.authClient.send('auth.login', loginDto);
+    return this.authClient.emit('auth.login', loginDto);
   }
 
   @Post('register')
   async register(@Body() registerDto: any) {
-    return this.authClient.send('auth.register', registerDto);
+    return this.authClient.emit('auth.register', registerDto);
   }
 }

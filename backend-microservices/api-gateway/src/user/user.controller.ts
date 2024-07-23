@@ -11,6 +11,6 @@ export class UserController {
   @UseGuards(AuthGuard)
   @Get('profile')
   async getProfile() {
-    return this.userClient.send('user.get_profile', {});
+    return this.userClient.emit('user.getProfile', {});
   }
 }

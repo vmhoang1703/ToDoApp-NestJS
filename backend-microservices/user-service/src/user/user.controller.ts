@@ -6,12 +6,12 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @MessagePattern('get_user')
+  @MessagePattern('user.getProfile')
   async getUser(@Payload() username: string) {
     return this.userService.findOne(username);
   }
 
-  @MessagePattern('user_created')
+  @MessagePattern('user.create')
   async createUser(
     @Payload() userData: { username: string; password: string },
   ) {
