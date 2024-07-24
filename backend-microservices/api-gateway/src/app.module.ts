@@ -2,7 +2,6 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { Module } from '@nestjs/common';
 import { AuthController } from './auth/auth.controller';
 import { UserController } from './user/user.controller';
-import { TaskController } from './task/task.controller';
 
 @Module({
   imports: [
@@ -12,11 +11,11 @@ import { TaskController } from './task/task.controller';
         transport: Transport.KAFKA,
         options: {
           client: {
-            clientId: 'auth',
-            brokers: ['kafka:9093'],
+            brokers: ['localhost:29092'],
           },
           consumer: {
-            groupId: 'auth-consumer',
+            groupId: 'api-gateway-consumer-client',
+            allowAutoTopicCreation: true,
           },
         },
       },
@@ -26,29 +25,16 @@ import { TaskController } from './task/task.controller';
         options: {
           client: {
             clientId: 'user',
-            brokers: ['kafka:9093'],
+            brokers: ['localhost:29092'],
           },
           consumer: {
-            groupId: 'user-consumer',
-          },
-        },
-      },
-      {
-        name: 'TASK_SERVICE',
-        transport: Transport.KAFKA,
-        options: {
-          client: {
-            clientId: 'task',
-            brokers: ['kafka:9093'],
-          },
-          consumer: {
-            groupId: 'task-consumer',
+            groupId: 'api-gateway-consumer',
           },
         },
       },
     ]),
   ],
-  controllers: [AuthController, UserController, TaskController],
+  controllers: [AuthController, UserController],
   providers: [],
 })
 export class AppModule {}

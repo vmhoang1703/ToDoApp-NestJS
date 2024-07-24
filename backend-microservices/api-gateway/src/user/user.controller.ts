@@ -1,4 +1,4 @@
-import { Controller, Get, Inject, UseGuards } from '@nestjs/common';
+import { Controller, Get, Inject, UseGuards, Request } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { AuthGuard } from 'src/auth/auth.guard';
 
@@ -10,7 +10,7 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Get('profile')
-  async getProfile() {
-    return this.userClient.emit('user.getProfile', {});
+  async getProfile(@Request() req) {
+    return req.user;
   }
 }

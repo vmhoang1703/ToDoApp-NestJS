@@ -6,7 +6,7 @@ import { User, UserSchema } from './schema/user.schema';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost/Todo-NestJS'),
+    MongooseModule.forRoot('mongodb://localhost:27017/Todo-NestJS'),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
   controllers: [UserController],
