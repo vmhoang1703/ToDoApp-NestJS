@@ -17,7 +17,7 @@ export class AuthController implements OnModuleInit {
   @Post('register')
   async register(@Body() createUserDto: any): Promise<any> {
     return await firstValueFrom(
-      this.authClient.emit('auth.register', createUserDto),
+      this.authClient.send('auth.register', createUserDto),
     );
   }
 

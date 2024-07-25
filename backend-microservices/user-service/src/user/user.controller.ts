@@ -17,4 +17,11 @@ export class UserController {
   ) {
     return this.userService.createUser(userData);
   }
+
+  @MessagePattern('user.checkPassword')
+  async checkPassword(
+    @Payload() userData: { username: string; password: string },
+  ): Promise<boolean> {
+    return this.userService.checkPassword(userData);
+  }
 }
