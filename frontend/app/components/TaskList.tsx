@@ -2,18 +2,12 @@
 
 import { useState, useEffect } from "react";
 import {
-  Button,
   Card,
   CardActions,
   CardContent,
-  CardMedia,
   Checkbox,
   Container,
-  Divider,
   IconButton,
-  List,
-  ListItem,
-  ListItemText,
   Typography,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -21,11 +15,12 @@ import axios from "axios";
 import Task from "../interfaces/Task";
 import { useRouter } from "next/navigation";
 
-const API_URL = "http://localhost:3000/tasks";
+const API_URL = "http://localhost:3000/task";
 
 const TaskList = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const route = useRouter();
+  const userId = localStorage.getItem("user_id");
 
   useEffect(() => {
     fetchTasks();
@@ -33,7 +28,9 @@ const TaskList = () => {
 
   const fetchTasks = async () => {
     try {
-      const { data } = await axios.get(API_URL);
+      const { data } = await axios.get(API_URL, {
+        params: { userId },
+      });
       setTasks(data);
     } catch (error) {
       console.error("Error fetching tasks:", error);

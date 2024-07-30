@@ -9,8 +9,8 @@ export class UserController {
   ) {}
 
   @UseGuards(AuthGuard)
-  @Get('profile')
-  async getProfile(@Request() req) {
+  @Get('')
+  async authenticate(@Request() req) {
     return req.user;
   }
 }

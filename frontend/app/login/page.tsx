@@ -61,7 +61,12 @@ const SignIn = () => {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{ mt: 1 }}
+          >
             <TextField
               margin="normal"
               required
@@ -86,17 +91,30 @@ const SignIn = () => {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
               Sign In
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" passHref style={{ textDecoration: "none", fontSize: "15px" }}>
+                <Link
+                  href="#"
+                  passHref
+                  style={{ textDecoration: "none", fontSize: "15px" }}
+                >
                   Forgot password?
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="/register" passHref style={{ textDecoration: "none", fontSize: "15px" }}>
+                <Link
+                  href="/register"
+                  passHref
+                  style={{ textDecoration: "none", fontSize: "15px" }}
+                >
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

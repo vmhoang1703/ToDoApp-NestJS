@@ -26,13 +26,14 @@ export default function Home() {
           };
 
           const response = await axios.get(
-            "http://localhost:3000/auth/profile",
+            "http://localhost:3000/user",
             {
               headers,
             }
           );
 
           if (response.status === 200) {
+            localStorage.setItem("user_id", response.data.userId);
             setIsLoggedIn(true);
           } else {
             setIsLoggedIn(false);

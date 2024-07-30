@@ -32,11 +32,11 @@ const SignUp = () => {
     const data = new FormData(event.currentTarget);
 
     try {
-      await axios.post(API_URL, {
+      const user = await axios.post(API_URL, {
         username: data.get("username"),
         password: data.get("password"),
       });
-      console.log("User created successfully:");
+      console.log("User created successfully");
       router.push("/login");
     } catch (error) {
       console.error("Error creating user:", error);

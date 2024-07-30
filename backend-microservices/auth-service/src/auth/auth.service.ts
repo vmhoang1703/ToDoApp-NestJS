@@ -4,14 +4,12 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { ClientKafka } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly jwtService: JwtService,
     @Inject('USER_SERVICE') private readonly userClient: ClientKafka,
   ) {}
 
@@ -19,6 +17,8 @@ export class AuthService {
     this.userClient.subscribeToResponseOf('user.get');
     this.userClient.subscribeToResponseOf('user.create');
     this.userClient.subscribeToResponseOf('user.checkPassword');
+    this.userClient.subscribeToResponseOf('user.createAccessToken');
+    this.userClient.subscribeToResponseOf('user.verifyAccessToken');
     await this.userClient.connect();
   }
 
@@ -48,12 +48,8 @@ export class AuthService {
   async login(loginUserDto: {
     username: string;
     password: string;
-  }): Promise<{ access_token: string }> {
+  }): Promise<{ user_id: string; access_token: string }> {
     try {
-      const user = await firstValueFrom(
-        this.userClient.send('user.get', loginUserDto.username),
-      );
-
       const checkPassword = await firstValueFrom(
         this.userClient.send('user.checkPassword', loginUserDto),
       );
@@ -70,11 +66,10 @@ export class AuthService {
         );
         throw new UnauthorizedException('Unable to verify credentials.');
       }
-
-      const payload = { sub: user._id, username: user.username };
-      return {
-        access_token: await this.jwtService.signAsync(payload),
-      };
+      const accessTokenResponse = await firstValueFrom(
+        this.userClient.send('user.createAccessToken', loginUserDto),
+      );
+      return accessTokenResponse;
     } catch (error) {
       console.error('Error during login:', error);
       throw error;
@@ -83,7 +78,10 @@ export class AuthService {
 
   async verify(token: string) {
     try {
-      return this.jwtService.verify(token);
+      const verifyAccessToken = await firstValueFrom(
+        this.userClient.send('user.verifyAccessToken', token),
+      );
+      return verifyAccessToken;
     } catch (e) {
       throw new UnauthorizedException('Invalid token.');
     }

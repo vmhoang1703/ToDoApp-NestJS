@@ -4,7 +4,7 @@ import { FC, useState } from "react";
 import { TextField, Button, Container } from "@mui/material";
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/tasks";
+const API_URL = "http://localhost:3000/task";
 
 interface TaskFormProps {
   handleClose: () => void;
@@ -12,13 +12,18 @@ interface TaskFormProps {
 
 const TaskForm: FC<TaskFormProps> = ({ handleClose }) => {
   const [newTask, setNewTask] = useState("");
+  const userId = localStorage.getItem("user_id");
 
   const addTask = async () => {
     const taskTitle = newTask.trim();
     if (!taskTitle) return;
 
     try {
-      await axios.post(API_URL, { title: taskTitle, isCompleted: false });
+      await axios.post(API_URL, {
+        userId: userId,
+        title: taskTitle,
+        isCompleted: false,
+      });
       setNewTask("");
       handleClose();
     } catch (error) {

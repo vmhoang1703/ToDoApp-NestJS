@@ -21,7 +21,19 @@ export class UserController {
   @MessagePattern('user.checkPassword')
   async checkPassword(
     @Payload() userData: { username: string; password: string },
-  ): Promise<boolean> {
+  ) {
     return this.userService.checkPassword(userData);
+  }
+
+  @MessagePattern('user.createAccessToken')
+  async createAccessToken(
+    @Payload() userData: { username: string; password: string },
+  ) {
+    return this.userService.createAccessToken(userData);
+  }
+
+  @MessagePattern('user.verifyAccessToken')
+  async verifyAccessToken(@Payload() token: string) {
+    return this.userService.verifyAccessToken(token);
   }
 }
