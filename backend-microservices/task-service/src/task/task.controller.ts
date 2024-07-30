@@ -24,7 +24,7 @@ export class TaskController {
   }
 
   @MessagePattern('task.update')
-  async updateTaskStatus(
+  async updateTask(
     @Payload()
     payload: {
       taskId: string;
@@ -33,5 +33,13 @@ export class TaskController {
   ) {
     const { taskId, updateTaskDto } = payload;
     return this.taskService.updateTask(taskId, updateTaskDto);
+  }
+
+  @MessagePattern('task.delete')
+  async deleteTask(
+    @Payload()
+    taskId: string,
+  ) {
+    return this.taskService.deleteTask(taskId);
   }
 }

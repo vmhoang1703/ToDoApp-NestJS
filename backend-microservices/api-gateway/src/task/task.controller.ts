@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
@@ -23,6 +24,7 @@ export class TaskController {
     this.taskClient.subscribeToResponseOf('task.getAll');
     this.taskClient.subscribeToResponseOf('task.create');
     this.taskClient.subscribeToResponseOf('task.update');
+    this.taskClient.subscribeToResponseOf('task.delete');
     await this.taskClient.connect();
   }
 
@@ -45,5 +47,10 @@ export class TaskController {
     return await firstValueFrom(
       this.taskClient.send('task.update', { taskId, updateTaskDto }),
     );
+  }
+
+  @Delete(':id')
+  async deleteTask(@Param('id') taskId: string) {
+    return await firstValueFrom(this.taskClient.send('task.delete', taskId));
   }
 }
