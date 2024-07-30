@@ -8,9 +8,10 @@ const API_URL = "http://localhost:3000/task";
 
 interface TaskFormProps {
   handleClose: () => void;
+  fetchTasks: () => void;
 }
 
-const TaskForm: FC<TaskFormProps> = ({ handleClose }) => {
+const TaskForm: FC<TaskFormProps> = ({ handleClose, fetchTasks }) => {
   const [newTask, setNewTask] = useState("");
   const userId = localStorage.getItem("user_id");
 
@@ -25,6 +26,7 @@ const TaskForm: FC<TaskFormProps> = ({ handleClose }) => {
         isCompleted: false,
       });
       setNewTask("");
+      fetchTasks();
       handleClose();
     } catch (error) {
       console.error("Error adding task:", error);
@@ -53,7 +55,7 @@ const TaskForm: FC<TaskFormProps> = ({ handleClose }) => {
         onClick={addTask}
         sx={{ marginTop: "10px" }}
       >
-        Add Task
+        Add
       </Button>
     </Container>
   );

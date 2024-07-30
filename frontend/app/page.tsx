@@ -1,14 +1,11 @@
 "use client";
 
-import { Box, Container, Typography } from "@mui/material";
-import TaskForm from "./components/TaskForm";
+import { Container } from "@mui/material";
 import TaskList from "./components/TaskList";
-import Image from "next/image";
 import MainBar from "./components/MainBar";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import AddButton from "./components/AddButton";
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -25,12 +22,9 @@ export default function Home() {
             "Content-Type": "application/json",
           };
 
-          const response = await axios.get(
-            "http://localhost:3000/user",
-            {
-              headers,
-            }
-          );
+          const response = await axios.get("http://localhost:3000/user", {
+            headers,
+          });
 
           if (response.status === 200) {
             localStorage.setItem("user_id", response.data.userId);
@@ -61,7 +55,6 @@ export default function Home() {
       <MainBar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
       {isLoggedIn ? (
         <Container maxWidth="xl" sx={{ mt: 12 }}>
-          <AddButton />
           <TaskList />
         </Container>
       ) : null}
