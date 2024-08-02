@@ -5,11 +5,12 @@ import {
   Card,
   CardActions,
   CardContent,
-  Checkbox,
   Container,
   IconButton,
   Typography,
   Box,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
@@ -46,12 +47,15 @@ const TaskList = () => {
       const newColumns = {
         todo: {
           ...columns.todo,
-          tasks: data.filter((task: Task) => !task.isCompleted),
+          tasks: data.filter((task: Task) => task.status === "todo"),
         },
-        inProgress: { ...columns.inProgress, tasks: [] },
+        inProgress: {
+          ...columns.inProgress,
+          tasks: data.filter((task: Task) => task.status === "inProgress"),
+        },
         done: {
           ...columns.done,
-          tasks: data.filter((task: Task) => task.isCompleted),
+          tasks: data.filter((task: Task) => task.status === "done"),
         },
       };
       setColumns(newColumns);
@@ -60,21 +64,29 @@ const TaskList = () => {
     }
   };
 
-  const toggleTask = async (id: string, isCompleted: boolean) => {
+  const updateTaskStatus = async (id: string, newStatus: string) => {
     try {
-      await axios.put(`${API_URL}/${id}`, { isCompleted: !isCompleted });
+      await axios.put(`${API_URL}/${id}`, { status: newStatus });
       const updatedColumns = { ...columns };
-      const sourceColumn = isCompleted ? "done" : "todo";
-      const destColumn = isCompleted ? "todo" : "done";
+      let sourceColumnId: string | null = null;
+      let task: Task | null = null;
 
-      const taskIndex = updatedColumns[sourceColumn].tasks.findIndex(
-        (task) => task._id === id
-      );
-      const [task] = updatedColumns[sourceColumn].tasks.splice(taskIndex, 1);
-      task.isCompleted = !isCompleted;
-      updatedColumns[destColumn].tasks.push(task);
+      for (const columnId in updatedColumns) {
+        const taskIndex = updatedColumns[columnId].tasks.findIndex(
+          (t) => t._id === id
+        );
+        if (taskIndex !== -1) {
+          [task] = updatedColumns[columnId].tasks.splice(taskIndex, 1);
+          sourceColumnId = columnId;
+          break;
+        }
+      }
 
-      setColumns(updatedColumns);
+      if (task && sourceColumnId) {
+        task.status = newStatus;
+        updatedColumns[newStatus].tasks.push(task);
+        setColumns(updatedColumns);
+      }
     } catch (error) {
       console.error("Error updating task:", error);
     }
@@ -102,11 +114,9 @@ const TaskList = () => {
     const [movedTask] = sourceColumn.tasks.splice(source.index, 1);
 
     if (source.droppableId !== destination.droppableId) {
-      movedTask.isCompleted = destination.droppableId === "done";
+      movedTask.status = destination.droppableId;
       axios
-        .put(`${API_URL}/${movedTask._id}`, {
-          isCompleted: movedTask.isCompleted,
-        })
+        .put(`${API_URL}/${movedTask._id}`, { status: movedTask.status })
         .catch((error) => console.error("Error updating task status:", error));
     }
 
@@ -132,9 +142,9 @@ const TaskList = () => {
               width="30%"
               sx={{
                 backgroundColor:
-                  column.id == "todo"
+                  column.id === "todo"
                     ? "#ffcccb"
-                    : column.id == "inProgress"
+                    : column.id === "inProgress"
                       ? "#ffffcc"
                       : "#90EE90",
                 borderRadius: 2,
@@ -169,24 +179,24 @@ const TaskList = () => {
                             sx={{ mb: 2 }}
                           >
                             <CardContent>
-                              <Typography
-                                variant="body1"
-                                sx={{
-                                  textDecoration: task.isCompleted
-                                    ? "line-through"
-                                    : "none",
-                                }}
-                              >
+                              <Typography variant="body1">
                                 {task.title}
                               </Typography>
                             </CardContent>
                             <CardActions>
-                              <Checkbox
-                                checked={task.isCompleted}
-                                onChange={() =>
-                                  toggleTask(task._id, task.isCompleted)
+                              <Select
+                                value={task.status}
+                                onChange={(e) =>
+                                  updateTaskStatus(task._id, e.target.value)
                                 }
-                              />
+                                size="small"
+                              >
+                                <MenuItem value="todo">Todo</MenuItem>
+                                <MenuItem value="inProgress">
+                                  In Progress
+                                </MenuItem>
+                                <MenuItem value="done">Done</MenuItem>
+                              </Select>
                               <IconButton
                                 edge="end"
                                 aria-label="delete"

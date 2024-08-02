@@ -1,7 +1,7 @@
 interface Task {
   _id: string;
   title: string;
-  isCompleted: boolean;
+  status: string;
 }
 
 export default Task;
