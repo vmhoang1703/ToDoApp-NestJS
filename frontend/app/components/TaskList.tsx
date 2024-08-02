@@ -130,7 +130,20 @@ const TaskList = () => {
           sx={{ my: 5, display: "flex", justifyContent: "space-between" }}
         >
           {Object.values(columns).map((column) => (
-            <Box key={column.id} width="30%">
+            <Box
+              key={column.id}
+              width="30%"
+              sx={{
+                backgroundColor:
+                  column.id == "todo"
+                    ? "#ffcccb"
+                    : column.id == "inProgress"
+                      ? "#ffffcc"
+                      : "#90EE90",
+                borderRadius: 2,
+                p: 2,
+              }}
+            >
               <Typography
                 variant="h6"
                 gutterBottom
