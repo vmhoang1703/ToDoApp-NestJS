@@ -15,7 +15,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Task from "../interfaces/Task";
-import { useRouter } from "next/navigation";
 import AddButton from "./AddButton";
 
 const API_URL = "http://localhost:3000/task";
@@ -32,7 +31,6 @@ const TaskList = () => {
     inProgress: { id: "inProgress", title: "In Progress", tasks: [] },
     done: { id: "done", title: "Done", tasks: [] },
   });
-  const route = useRouter();
   const userId = localStorage.getItem("user_id");
 
   useEffect(() => {
