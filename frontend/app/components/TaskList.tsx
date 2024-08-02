@@ -184,7 +184,7 @@ const TaskList = () => {
                               </Typography>
                             </CardContent>
                             <CardActions>
-                              <Select
+                              {/* <Select
                                 value={task.status}
                                 onChange={(e) =>
                                   updateTaskStatus(task._id, e.target.value)
@@ -196,7 +196,7 @@ const TaskList = () => {
                                   In Progress
                                 </MenuItem>
                                 <MenuItem value="done">Done</MenuItem>
-                              </Select>
+                              </Select> */}
                               <IconButton
                                 edge="end"
                                 aria-label="delete"

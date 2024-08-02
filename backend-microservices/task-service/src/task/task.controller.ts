@@ -1,6 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
+import { Task } from './schemas/task.schema';
 
 @Controller('task')
 export class TaskController {
@@ -14,11 +15,7 @@ export class TaskController {
   @MessagePattern('task.create')
   async createTask(
     @Payload()
-    taskData: {
-      userId: string;
-      title: string;
-      status: string;
-    },
+    taskData: Task,
   ) {
     return this.taskService.createTask(taskData);
   }
@@ -28,7 +25,7 @@ export class TaskController {
     @Payload()
     payload: {
       taskId: string;
-      updateTaskDto: { userId: string; title: string; status: string };
+      updateTaskDto: Task;
     },
   ) {
     const { taskId, updateTaskDto } = payload;
