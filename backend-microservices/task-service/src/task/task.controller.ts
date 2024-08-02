@@ -17,7 +17,7 @@ export class TaskController {
     taskData: {
       userId: string;
       title: string;
-      isCompleted: boolean;
+      status: string;
     },
   ) {
     return this.taskService.createTask(taskData);
@@ -28,7 +28,7 @@ export class TaskController {
     @Payload()
     payload: {
       taskId: string;
-      updateTaskDto: { userId: string; title: string; isCompleted: boolean };
+      updateTaskDto: { userId: string; title: string; status: string };
     },
   ) {
     const { taskId, updateTaskDto } = payload;

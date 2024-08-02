@@ -14,7 +14,7 @@ export class TaskService {
   async createTask(taskData: {
     userId: string;
     title: string;
-    isCompleted: boolean;
+    status: string;
   }): Promise<Task> {
     const createdTask = new this.taskModel(taskData);
     return createdTask.save();
@@ -22,7 +22,7 @@ export class TaskService {
 
   async updateTask(
     taskId: string,
-    taskData: { userId: string; title: string; isCompleted: boolean },
+    taskData: { userId: string; title: string; status: string },
   ): Promise<Task> {
     const updateTask = await this.taskModel
       .findByIdAndUpdate(taskId, taskData, { new: true })

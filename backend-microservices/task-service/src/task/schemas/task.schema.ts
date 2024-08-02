@@ -14,8 +14,8 @@ export class Task {
   @Prop({ required: true })
   title: string;
 
-  @Prop({ required: true, default: false })
-  isCompleted: boolean;
+  @Prop({ required: true, default: 'todo' })
+  status: string;
 }
 
 export const TaskSchema = SchemaFactory.createForClass(Task);
