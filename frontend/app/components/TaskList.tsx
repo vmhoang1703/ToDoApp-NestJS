@@ -17,7 +17,6 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Task from "../interfaces/Task";
 import { useRouter } from "next/navigation";
 import AddButton from "./AddButton";
-import { CenterFocusStrong } from "@mui/icons-material";
 
 const API_URL = "http://localhost:3000/task";
 
