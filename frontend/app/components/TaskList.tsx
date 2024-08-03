@@ -9,14 +9,18 @@ import {
   IconButton,
   Typography,
   Box,
-  Select,
-  MenuItem,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  styled,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Task from "../interfaces/Task";
 import AddButton from "./AddButton";
+import CloseIcon from "@mui/icons-material/Close";
+import LongDescription from "./LongDescription";
 
 const API_URL = "http://localhost:3000/task";
 
@@ -64,34 +68,6 @@ const TaskList = () => {
     }
   };
 
-  const updateTaskStatus = async (id: string, newStatus: string) => {
-    try {
-      await axios.put(`${API_URL}/${id}`, { status: newStatus });
-      const updatedColumns = { ...columns };
-      let sourceColumnId: string | null = null;
-      let task: Task | null = null;
-
-      for (const columnId in updatedColumns) {
-        const taskIndex = updatedColumns[columnId].tasks.findIndex(
-          (t) => t._id === id
-        );
-        if (taskIndex !== -1) {
-          [task] = updatedColumns[columnId].tasks.splice(taskIndex, 1);
-          sourceColumnId = columnId;
-          break;
-        }
-      }
-
-      if (task && sourceColumnId) {
-        task.status = newStatus;
-        updatedColumns[newStatus].tasks.push(task);
-        setColumns(updatedColumns);
-      }
-    } catch (error) {
-      console.error("Error updating task:", error);
-    }
-  };
-
   const deleteTask = async (id: string, columnId: string) => {
     try {
       await axios.delete(`${API_URL}/${id}`);
@@ -100,6 +76,7 @@ const TaskList = () => {
         (task) => task._id !== id
       );
       setColumns(updatedColumns);
+      handleClose();
     } catch (error) {
       console.error("Error deleting task:", error);
     }
@@ -126,6 +103,25 @@ const TaskList = () => {
       [sourceColumn.id]: sourceColumn,
       [destColumn.id]: destColumn,
     });
+  };
+
+  const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+    "& .MuiDialogContent-root": {
+      padding: theme.spacing(2),
+    },
+    "& .MuiDialogActions-root": {
+      padding: theme.spacing(1),
+    },
+  }));
+
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -172,40 +168,67 @@ const TaskList = () => {
                         index={index}
                       >
                         {(provided) => (
-                          <Card
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            sx={{ mb: 2 }}
-                          >
-                            <CardContent>
-                              <Typography variant="body1">
+                          <>
+                            <Card
+                              onClick={handleClickOpen}
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              sx={{ mb: 2 }}
+                            >
+                              <CardContent>
+                                <Typography variant="h6" gutterBottom>
+                                  {task.title}
+                                </Typography>
+                                <Typography variant="body1">
+                                  <LongDescription
+                                    content={task.description}
+                                    limit={70}
+                                  />
+                                </Typography>
+                              </CardContent>
+                              <CardActions>
+                                <IconButton
+                                  edge="end"
+                                  aria-label="delete"
+                                  onClick={() =>
+                                    deleteTask(task._id, column.id)
+                                  }
+                                >
+                                  <DeleteIcon />
+                                </IconButton>
+                              </CardActions>
+                            </Card>
+                            <BootstrapDialog
+                              onClose={handleClose}
+                              aria-labelledby="customized-dialog-title"
+                              open={open}
+                            >
+                              <DialogTitle
+                                sx={{ m: 0, p: 2 }}
+                                id="customized-dialog-title"
+                              >
                                 {task.title}
-                              </Typography>
-                            </CardContent>
-                            <CardActions>
-                              {/* <Select
-                                value={task.status}
-                                onChange={(e) =>
-                                  updateTaskStatus(task._id, e.target.value)
-                                }
-                                size="small"
-                              >
-                                <MenuItem value="todo">Todo</MenuItem>
-                                <MenuItem value="inProgress">
-                                  In Progress
-                                </MenuItem>
-                                <MenuItem value="done">Done</MenuItem>
-                              </Select> */}
+                              </DialogTitle>
                               <IconButton
-                                edge="end"
-                                aria-label="delete"
-                                onClick={() => deleteTask(task._id, column.id)}
+                                aria-label="close"
+                                onClick={handleClose}
+                                sx={{
+                                  position: "absolute",
+                                  right: 8,
+                                  top: 8,
+                                  color: (theme) => theme.palette.grey[500],
+                                }}
                               >
-                                <DeleteIcon />
+                                <CloseIcon />
                               </IconButton>
-                            </CardActions>
-                          </Card>
+                              <DialogContent dividers>
+                                <Typography gutterBottom>
+                                  {task.description}
+                                </Typography>
+                              </DialogContent>
+                            </BootstrapDialog>
+                          </>
                         )}
                       </Draggable>
                     ))}
