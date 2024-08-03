@@ -127,7 +127,6 @@ const TaskList = () => {
 
   return (
     <>
-      <AddButton fetchTasks={fetchTasks} />
       <DragDropContext onDragEnd={onDragEnd}>
         <Container
           maxWidth="xl"
@@ -194,7 +193,7 @@ const TaskList = () => {
                                     display: "flex",
                                     justifyContent: "space-between",
                                     width: "100%",
-                                    mx: 2
+                                    mx: 2,
                                   }}
                                 >
                                   <IconButton
@@ -260,6 +259,7 @@ const TaskList = () => {
           ))}
         </Container>
       </DragDropContext>
+      <AddButton fetchTasks={fetchTasks}/>
     </>
   );
 };

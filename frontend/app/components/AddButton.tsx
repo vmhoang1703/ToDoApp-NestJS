@@ -19,7 +19,7 @@ const AddButton: FC<AddButtonProps> = ({ fetchTasks }) => {
   };
 
   return (
-    <Fragment>
+    <div style={{ position: "fixed", bottom: 50, right: 50 }}>
       <Fab color="primary" aria-label="add" onClick={handleClickOpen}>
         <AddIcon />
       </Fab>
@@ -27,7 +27,7 @@ const AddButton: FC<AddButtonProps> = ({ fetchTasks }) => {
         <DialogTitle>Add New Task</DialogTitle>
         <TaskForm handleClose={handleClose} fetchTasks={fetchTasks} />
       </Dialog>
-    </Fragment>
+    </div>
   );
 };
 
