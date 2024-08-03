@@ -15,6 +15,7 @@ import {
   styled,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import axios from "axios";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Task from "../interfaces/Task";
@@ -188,15 +189,34 @@ const TaskList = () => {
                                 </Typography>
                               </CardContent>
                               <CardActions>
-                                <IconButton
-                                  edge="end"
-                                  aria-label="delete"
-                                  onClick={() =>
-                                    deleteTask(task._id, column.id)
-                                  }
+                                <Box
+                                  sx={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    width: "100%",
+                                    mx: 2
+                                  }}
                                 >
-                                  <DeleteIcon />
-                                </IconButton>
+                                  <IconButton
+                                    edge="start"
+                                    aria-label="edit"
+                                    onClick={(event) => {
+                                      event.stopPropagation();
+                                    }}
+                                  >
+                                    <EditIcon sx={{ color: "#3399ff" }} />
+                                  </IconButton>
+                                  <IconButton
+                                    edge="end"
+                                    aria-label="delete"
+                                    onClick={(event) => {
+                                      event.stopPropagation();
+                                      deleteTask(task._id, column.id);
+                                    }}
+                                  >
+                                    <DeleteIcon sx={{ color: "#FF6666" }} />
+                                  </IconButton>
+                                </Box>
                               </CardActions>
                             </Card>
                             <BootstrapDialog
