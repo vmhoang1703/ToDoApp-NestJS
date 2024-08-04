@@ -7,6 +7,7 @@ import axios from "axios";
 const API_URL = "http://localhost:3000/task";
 
 interface EditTaskFormProps {
+  taskId: string;
   title: string;
   description: string;
   status: string;
@@ -15,6 +16,7 @@ interface EditTaskFormProps {
 }
 
 const EditTaskForm: FC<EditTaskFormProps> = ({
+  taskId,
   title,
   description,
   status,
@@ -29,10 +31,11 @@ const EditTaskForm: FC<EditTaskFormProps> = ({
   const updateTask = async () => {
     const updateTitle = updateTaskTitle.trim();
     const updateDescription = updateTaskDescription.trim();
-    if (!updateTitle && !updateDescription) return;
+
+    console.log(updateTitle, updateDescription);
 
     try {
-      await axios.put(API_URL, {
+      await axios.put(`${API_URL}/${taskId}`, {
         userId: userId,
         title: updateTaskTitle,
         description: updateTaskDescription,

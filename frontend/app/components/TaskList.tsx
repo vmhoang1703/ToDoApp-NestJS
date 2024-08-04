@@ -258,10 +258,7 @@ const TaskList = () => {
                                     <IconButton
                                       edge="start"
                                       aria-label="edit"
-                                      onClick={(event) => {
-                                        event.stopPropagation();
-                                        handleClickOpenEditForm();
-                                      }}
+                                      onClick={handleClickOpenEditForm}
                                     >
                                       <EditIcon sx={{ color: "#3399ff" }} />
                                     </IconButton>
@@ -271,6 +268,7 @@ const TaskList = () => {
                                     >
                                       <DialogTitle>Edit Task</DialogTitle>
                                       <EditTaskForm
+                                        taskId={task._id}
                                         title={task.title}
                                         description={task.description}
                                         status={task.status}
@@ -282,8 +280,7 @@ const TaskList = () => {
                                   <IconButton
                                     edge="end"
                                     aria-label="delete"
-                                    onClick={(event) => {
-                                      event.stopPropagation();
+                                    onClick={() => {
                                       deleteTask(task._id, column.id);
                                     }}
                                   >
