@@ -1,6 +1,4 @@
-"use client";
-
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardActions,
@@ -16,11 +14,11 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Task from "../interfaces/Task";
 import AddButton from "./AddButton";
-import CloseIcon from "@mui/icons-material/Close";
 import LongDescription from "./LongDescription";
 import EditTaskForm from "./EditTaskForm";
 
@@ -32,12 +30,14 @@ interface Column {
   tasks: Task[];
 }
 
-const TaskList = () => {
+const TaskList: React.FC = () => {
   const [columns, setColumns] = useState<{ [key: string]: Column }>({
     todo: { id: "todo", title: "Todo", tasks: [] },
     inProgress: { id: "inProgress", title: "In Progress", tasks: [] },
     done: { id: "done", title: "Done", tasks: [] },
   });
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [openEditForm, setOpenEditForm] = useState(false);
   const userId = localStorage.getItem("user_id");
 
   useEffect(() => {
@@ -46,10 +46,7 @@ const TaskList = () => {
 
   const fetchTasks = async () => {
     try {
-      const { data } = await axios.get(API_URL, {
-        params: { userId },
-      });
-
+      const { data } = await axios.get(API_URL, { params: { userId } });
       const newColumns = {
         todo: {
           ...columns.todo,
@@ -78,7 +75,7 @@ const TaskList = () => {
         (task) => task._id !== id
       );
       setColumns(updatedColumns);
-      handleClose();
+      setSelectedTask(null);
     } catch (error) {
       console.error("Error deleting task:", error);
     }
@@ -107,26 +104,13 @@ const TaskList = () => {
     });
   };
 
-  const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-    "& .MuiDialogContent-root": {
-      padding: theme.spacing(2),
-    },
-    "& .MuiDialogActions-root": {
-      padding: theme.spacing(1),
-    },
-  }));
-
-  const [open, setOpen] = useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
+  const handleClickOpen = (task: Task) => {
+    setSelectedTask(task);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setSelectedTask(null);
   };
-
-  const [openEditForm, setOpenEditForm] = useState(false);
 
   const handleClickOpenEditForm = () => {
     setOpenEditForm(true);
@@ -135,6 +119,20 @@ const TaskList = () => {
   const handleCloseEditForm = () => {
     setOpenEditForm(false);
   };
+
+  const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+    "& .MuiDialog-paper": {
+      minWidth: "300px",
+      width: "auto",
+      maxWidth: "600px",
+    },
+    "& .MuiDialogContent-root": {
+      padding: theme.spacing(2),
+    },
+    "& .MuiDialogActions-root": {
+      padding: theme.spacing(1),
+    },
+  }));
 
   return (
     <>
@@ -179,117 +177,46 @@ const TaskList = () => {
                         index={index}
                       >
                         {(provided) => (
-                          <>
-                            <Card
-                              onClick={handleClickOpen}
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              sx={{ mb: 2 }}
-                            >
-                              <CardContent>
-                                <Typography variant="h6" gutterBottom>
-                                  {task.title}
-                                </Typography>
-                                <Typography variant="body1">
-                                  <LongDescription
-                                    content={task.description}
-                                    limit={70}
-                                  />
-                                </Typography>
-                              </CardContent>
-                              <CardActions>
-                                <Box
-                                  sx={{
-                                    display: "flex",
-                                    justifyContent: "end",
-                                    width: "100%",
-                                    mx: 2,
-                                  }}
-                                >
-                                  <IconButton
-                                    edge="end"
-                                    aria-label="delete"
-                                    onClick={(event) => {
-                                      event.stopPropagation();
-                                      deleteTask(task._id, column.id);
-                                    }}
-                                  >
-                                    <DeleteIcon sx={{ color: "#FF6666" }} />
-                                  </IconButton>
-                                </Box>
-                              </CardActions>
-                            </Card>
-                            <BootstrapDialog
-                              onClose={handleClose}
-                              aria-labelledby="customized-dialog-title"
-                              open={open}
-                            >
-                              <DialogTitle
-                                sx={{ m: 0, p: 2 }}
-                                id="customized-dialog-title"
-                              >
+                          <Card
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            sx={{ mb: 2 }}
+                            onClick={() => handleClickOpen(task)}
+                          >
+                            <CardContent>
+                              <Typography variant="h6" gutterBottom>
                                 {task.title}
-                              </DialogTitle>
-                              <IconButton
-                                aria-label="close"
-                                onClick={handleClose}
+                              </Typography>
+                              <Typography variant="body1">
+                                <LongDescription
+                                  content={task.description}
+                                  limit={70}
+                                />
+                              </Typography>
+                            </CardContent>
+                            <CardActions>
+                              <Box
                                 sx={{
-                                  position: "absolute",
-                                  right: 8,
-                                  top: 8,
-                                  color: (theme) => theme.palette.grey[500],
+                                  display: "flex",
+                                  justifyContent: "end",
+                                  width: "100%",
+                                  mx: 2,
                                 }}
                               >
-                                <CloseIcon />
-                              </IconButton>
-                              <DialogContent dividers sx={{ mx: 1 }}>
-                                <Typography gutterBottom>
-                                  {task.description}
-                                </Typography>
-                                <Box
-                                  sx={{
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                    width: "100%",
+                                <IconButton
+                                  edge="end"
+                                  aria-label="delete"
+                                  onClick={(event) => {
+                                    event.stopPropagation();
+                                    deleteTask(task._id, column.id);
                                   }}
                                 >
-                                  <>
-                                    <IconButton
-                                      edge="start"
-                                      aria-label="edit"
-                                      onClick={handleClickOpenEditForm}
-                                    >
-                                      <EditIcon sx={{ color: "#3399ff" }} />
-                                    </IconButton>
-                                    <Dialog
-                                      open={openEditForm}
-                                      onClose={handleCloseEditForm}
-                                    >
-                                      <DialogTitle>Edit Task</DialogTitle>
-                                      <EditTaskForm
-                                        taskId={task._id}
-                                        title={task.title}
-                                        description={task.description}
-                                        status={task.status}
-                                        handleClose={handleCloseEditForm}
-                                        fetchTasks={fetchTasks}
-                                      />
-                                    </Dialog>
-                                  </>
-                                  <IconButton
-                                    edge="end"
-                                    aria-label="delete"
-                                    onClick={() => {
-                                      deleteTask(task._id, column.id);
-                                    }}
-                                  >
-                                    <DeleteIcon sx={{ color: "#FF6666" }} />
-                                  </IconButton>
-                                </Box>
-                              </DialogContent>
-                            </BootstrapDialog>
-                          </>
+                                  <DeleteIcon sx={{ color: "#FF6666" }} />
+                                </IconButton>
+                              </Box>
+                            </CardActions>
+                          </Card>
                         )}
                       </Draggable>
                     ))}
@@ -302,6 +229,71 @@ const TaskList = () => {
         </Container>
       </DragDropContext>
       <AddButton fetchTasks={fetchTasks} />
+
+      {selectedTask && (
+        <BootstrapDialog
+          onClose={handleClose}
+          aria-labelledby="customized-dialog-title"
+          open={Boolean(selectedTask)}
+        >
+          <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
+            {selectedTask.title}
+          </DialogTitle>
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+          <DialogContent dividers sx={{ mx: 1 }}>
+            <Typography gutterBottom>{selectedTask.description}</Typography>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                width: "100%",
+              }}
+            >
+              <IconButton
+                edge="start"
+                aria-label="edit"
+                onClick={handleClickOpenEditForm}
+              >
+                <EditIcon sx={{ color: "#3399ff" }} />
+              </IconButton>
+              <IconButton
+                edge="end"
+                aria-label="delete"
+                onClick={() =>
+                  deleteTask(selectedTask._id, selectedTask.status)
+                }
+              >
+                <DeleteIcon sx={{ color: "#FF6666" }} />
+              </IconButton>
+            </Box>
+          </DialogContent>
+        </BootstrapDialog>
+      )}
+
+      <Dialog open={openEditForm} onClose={handleCloseEditForm}>
+        <DialogTitle>Edit Task</DialogTitle>
+        {selectedTask && (
+          <EditTaskForm
+            taskId={selectedTask._id}
+            title={selectedTask.title}
+            description={selectedTask.description}
+            status={selectedTask.status}
+            handleClose={handleCloseEditForm}
+            fetchTasks={fetchTasks}
+          />
+        )}
+      </Dialog>
     </>
   );
 };
