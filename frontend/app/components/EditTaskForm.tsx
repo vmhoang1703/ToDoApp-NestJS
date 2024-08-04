@@ -1,7 +1,8 @@
 "use client";
 
 import { FC, useState, KeyboardEvent } from "react";
-import { TextField, Button, Container } from "@mui/material";
+import { TextField, Button, Container, IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 
 const API_URL = "http://localhost:3000/task";
@@ -54,6 +55,18 @@ const EditTaskForm: FC<EditTaskFormProps> = ({
 
   return (
     <Container maxWidth="xl" sx={{ marginBottom: "25px" }}>
+      <IconButton
+        aria-label="close"
+        onClick={handleClose}
+        sx={{
+          position: "absolute",
+          right: 8,
+          top: 8,
+          color: (theme) => theme.palette.grey[500],
+        }}
+      >
+        <CloseIcon />
+      </IconButton>
       <TextField
         id="task-title"
         label="Title"
