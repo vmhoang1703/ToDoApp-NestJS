@@ -59,7 +59,7 @@ const TaskForm: FC<TaskFormProps> = ({ handleClose, fetchTasks }) => {
         variant="outlined"
         fullWidth
         multiline
-        rows={3}
+        rows={10}
         value={newTaskDescription}
         onChange={(e) => setNewTaskDescription(e.target.value)}
         sx={{ mb: 2 }}

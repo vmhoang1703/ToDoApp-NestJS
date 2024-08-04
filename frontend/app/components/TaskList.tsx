@@ -22,6 +22,7 @@ import Task from "../interfaces/Task";
 import AddButton from "./AddButton";
 import CloseIcon from "@mui/icons-material/Close";
 import LongDescription from "./LongDescription";
+import EditTaskForm from "./EditTaskForm";
 
 const API_URL = "http://localhost:3000/task";
 
@@ -125,6 +126,16 @@ const TaskList = () => {
     setOpen(false);
   };
 
+  const [openEditForm, setOpenEditForm] = useState(false);
+
+  const handleClickOpenEditForm = () => {
+    setOpenEditForm(true);
+  };
+
+  const handleCloseEditForm = () => {
+    setOpenEditForm(false);
+  };
+
   return (
     <>
       <DragDropContext onDragEnd={onDragEnd}>
@@ -191,20 +202,11 @@ const TaskList = () => {
                                 <Box
                                   sx={{
                                     display: "flex",
-                                    justifyContent: "space-between",
+                                    justifyContent: "end",
                                     width: "100%",
                                     mx: 2,
                                   }}
                                 >
-                                  <IconButton
-                                    edge="start"
-                                    aria-label="edit"
-                                    onClick={(event) => {
-                                      event.stopPropagation();
-                                    }}
-                                  >
-                                    <EditIcon sx={{ color: "#3399ff" }} />
-                                  </IconButton>
                                   <IconButton
                                     edge="end"
                                     aria-label="delete"
@@ -241,10 +243,53 @@ const TaskList = () => {
                               >
                                 <CloseIcon />
                               </IconButton>
-                              <DialogContent dividers>
+                              <DialogContent dividers sx={{ mx: 1 }}>
                                 <Typography gutterBottom>
                                   {task.description}
                                 </Typography>
+                                <Box
+                                  sx={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    width: "100%",
+                                  }}
+                                >
+                                  <>
+                                    <IconButton
+                                      edge="start"
+                                      aria-label="edit"
+                                      onClick={(event) => {
+                                        event.stopPropagation();
+                                        handleClickOpenEditForm();
+                                      }}
+                                    >
+                                      <EditIcon sx={{ color: "#3399ff" }} />
+                                    </IconButton>
+                                    <Dialog
+                                      open={openEditForm}
+                                      onClose={handleCloseEditForm}
+                                    >
+                                      <DialogTitle>Edit Task</DialogTitle>
+                                      <EditTaskForm
+                                        title={task.title}
+                                        description={task.description}
+                                        status={task.status}
+                                        handleClose={handleCloseEditForm}
+                                        fetchTasks={fetchTasks}
+                                      />
+                                    </Dialog>
+                                  </>
+                                  <IconButton
+                                    edge="end"
+                                    aria-label="delete"
+                                    onClick={(event) => {
+                                      event.stopPropagation();
+                                      deleteTask(task._id, column.id);
+                                    }}
+                                  >
+                                    <DeleteIcon sx={{ color: "#FF6666" }} />
+                                  </IconButton>
+                                </Box>
                               </DialogContent>
                             </BootstrapDialog>
                           </>
@@ -259,7 +304,7 @@ const TaskList = () => {
           ))}
         </Container>
       </DragDropContext>
-      <AddButton fetchTasks={fetchTasks}/>
+      <AddButton fetchTasks={fetchTasks} />
     </>
   );
 };
