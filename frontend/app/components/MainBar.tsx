@@ -1,5 +1,6 @@
 "use client";
 
+import { AccountCircle } from "@mui/icons-material";
 import {
   AppBar,
   Container,
@@ -12,10 +13,13 @@ import {
   Tooltip,
   Avatar,
   Button,
+  Badge,
 } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FC, MouseEvent, useState } from "react";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import Link from "next/link";
 
 interface MainBarProps {
   isLoggedIn: boolean;
@@ -25,7 +29,6 @@ interface MainBarProps {
 const MainBar: FC<MainBarProps> = ({ isLoggedIn, onLogout }) => {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-  const route = useRouter();
 
   const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -47,10 +50,6 @@ const MainBar: FC<MainBarProps> = ({ isLoggedIn, onLogout }) => {
     onLogout();
   };
 
-  const handleProfile = () => {
-    route.push("/profile");
-  };
-
   const navButtons = [
     { text: "Sign Up", route: "/register" },
     { text: "Sign In", route: "/login" },
@@ -67,7 +66,7 @@ const MainBar: FC<MainBarProps> = ({ isLoggedIn, onLogout }) => {
               alignItems: "center",
             }}
           >
-            <Button onClick={() => route.push("/")}>
+            <Link href={"/"}>
               <Image
                 src="/logo.png"
                 alt="Todo App Logo"
@@ -75,62 +74,82 @@ const MainBar: FC<MainBarProps> = ({ isLoggedIn, onLogout }) => {
                 height={50}
                 priority
               />
-              <Typography
-                variant="h6"
-                noWrap
-                component="a"
-                sx={{
-                  ml: 2,
-                  display: { xs: "flex", md: "flex" },
-                  fontFamily: "monospace",
-                  fontWeight: 700,
-                  letterSpacing: ".2rem",
-                  color: "#000",
-                  textDecoration: "none",
-                }}
-              >
-                TODO APP
-              </Typography>
-            </Button>
+            </Link>
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              sx={{
+                ml: 2,
+                display: { xs: "flex", md: "flex" },
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: ".2rem",
+                color: "#000",
+                textDecoration: "none",
+              }}
+            >
+              TODO APP
+            </Typography>
           </Box>
           <Box sx={{ flexGrow: 1 }} />
 
           {!isLoggedIn ? (
             <Box sx={{ flexGrow: 0 }}>
               {navButtons.map((button, index) => (
-                <Button
-                  key={index}
-                  sx={{ color: "#000" }}
-                  onClick={() => route.push(button.route)}
-                >
-                  {button.text}
+                <Button key={index} sx={{ color: "#000" }}>
+                  <Link
+                    href={button.route}
+                    style={{ textDecoration: "none", color: "#000" }}
+                  >
+                    {button.text}
+                  </Link>
                 </Button>
               ))}
             </Box>
           ) : (
             <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="User Avatar" src="/user.png" />
+              <Box sx={{ display: { xs: "none", md: "flex" } }}>
+                <IconButton
+                  size="large"
+                  aria-label="show 17 new notifications"
+                  color="primary"
+                  sx={{ mr: 5 }}
+                >
+                  <Badge badgeContent={17} color="error">
+                    <NotificationsIcon />
+                  </Badge>
                 </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                keepMounted
-                transformOrigin={{ vertical: "top", horizontal: "right" }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                <MenuItem onClick={handleProfile}>
-                  <Typography textAlign="center">Profile</Typography>
-                </MenuItem>
-                <MenuItem onClick={handleLogout}>
-                  <Typography textAlign="center">Logout</Typography>
-                </MenuItem>
-              </Menu>
+                <Tooltip title="Open settings">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar alt="User Avatar" src="/user.png" />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: "45px" }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                  keepMounted
+                  transformOrigin={{ vertical: "top", horizontal: "right" }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  <MenuItem>
+                    <Link
+                      href={"/profile"}
+                      style={{ textDecoration: "none", color: "#000" }}
+                    >
+                      <Typography textAlign="center">Profile</Typography>
+                    </Link>
+                  </MenuItem>
+                  <MenuItem onClick={handleLogout}>
+                    <Typography textAlign="center" sx={{ color: "#000" }}>
+                      Logout
+                    </Typography>
+                  </MenuItem>
+                </Menu>
+              </Box>
             </Box>
           )}
         </Toolbar>
