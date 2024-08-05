@@ -118,6 +118,7 @@ const TaskList: React.FC = () => {
 
   const handleCloseEditForm = () => {
     setOpenEditForm(false);
+    setSelectedTask(null);
   };
 
   const BootstrapDialog = styled(Dialog)(({ theme }) => ({
