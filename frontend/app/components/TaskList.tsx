@@ -15,12 +15,14 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import axios from "axios";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Task from "../interfaces/Task";
 import AddButton from "./AddButton";
 import LongDescription from "./LongDescription";
 import EditTaskForm from "./EditTaskForm";
+import dayjs from "dayjs";
 
 const API_URL = "http://localhost:3000/task";
 
@@ -135,6 +137,10 @@ const TaskList: React.FC = () => {
     },
   }));
 
+  const formatDueDate = (date: string) => {
+    return dayjs(date).format("MMM D, YYYY h:mm A");
+  };
+
   return (
     <>
       <DragDropContext onDragEnd={onDragEnd}>
@@ -195,6 +201,21 @@ const TaskList: React.FC = () => {
                                   limit={70}
                                 />
                               </Typography>
+                              {task.deadline && (
+                                <Typography
+                                  variant="body2"
+                                  sx={{
+                                    mt: 1,
+                                    display: "flex",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  <AccessTimeIcon
+                                    sx={{ fontSize: "small", mr: 0.5 }}
+                                  />
+                                  Due: {formatDueDate(task.deadline)}
+                                </Typography>
+                              )}
                             </CardContent>
                             <CardActions>
                               <Box
@@ -254,11 +275,21 @@ const TaskList: React.FC = () => {
           </IconButton>
           <DialogContent dividers sx={{ mx: 1 }}>
             <Typography gutterBottom>{selectedTask.description}</Typography>
+            {selectedTask.deadline && (
+              <Typography
+                variant="body2"
+                sx={{ mt: 2, display: "flex", alignItems: "center" }}
+              >
+                <AccessTimeIcon sx={{ fontSize: "small", mr: 0.5 }} />
+                Due: {formatDueDate(selectedTask.deadline)}
+              </Typography>
+            )}
             <Box
               sx={{
                 display: "flex",
                 justifyContent: "space-between",
                 width: "100%",
+                mt: 2,
               }}
             >
               <IconButton
@@ -290,6 +321,7 @@ const TaskList: React.FC = () => {
             title={selectedTask.title}
             description={selectedTask.description}
             status={selectedTask.status}
+            deadline={selectedTask.deadline}
             handleClose={handleCloseEditForm}
             fetchTasks={fetchTasks}
           />

@@ -5,9 +5,6 @@ export type TaskDocument = HydratedDocument<Task>;
 
 @Schema()
 export class Task {
-  //   @Prop({ required: true })
-  //   id: string;
-
   @Prop({ required: true })
   userId: string;
 
@@ -20,7 +17,7 @@ export class Task {
   @Prop({ required: true, default: 'todo' })
   status: string;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   deadline: Date;
 }
 

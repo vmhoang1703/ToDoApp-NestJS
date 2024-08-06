@@ -3,6 +3,7 @@ interface Task {
   title: string;
   description: string;
   status: string;
+  deadline?: string;
 }
 
 export default Task;
