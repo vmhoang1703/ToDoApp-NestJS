@@ -1,6 +1,5 @@
 "use client";
 
-import { AccountCircle } from "@mui/icons-material";
 import {
   AppBar,
   Container,
@@ -16,10 +15,10 @@ import {
   Badge,
 } from "@mui/material";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { FC, MouseEvent, useState } from "react";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Link from "next/link";
+// import { io } from "socket.io-client";
 
 interface MainBarProps {
   isLoggedIn: boolean;
@@ -29,6 +28,7 @@ interface MainBarProps {
 const MainBar: FC<MainBarProps> = ({ isLoggedIn, onLogout }) => {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+  // const userId = localStorage.getItem("user_id");
 
   const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -54,6 +54,25 @@ const MainBar: FC<MainBarProps> = ({ isLoggedIn, onLogout }) => {
     { text: "Sign Up", route: "/register" },
     { text: "Sign In", route: "/login" },
   ];
+
+  // const [notification, setNotification] = useState(null);
+
+  // useEffect(() => {
+  //   const socket = io("http://localhost:3000", {
+  //     transports: ["websocket"],
+  //     path: "/socket.io",
+  //   });
+  //   socket.on("connect", () => {
+  //     console.log("Connected to WebSocket server");
+  //   });
+  //   socket.on("deadline_notification", (data) => {
+  //     console.log("Notification received:", data);
+  //   });
+
+  //   return () => {
+  //     socket.disconnect();
+  //   };
+  // }, [userId]);
 
   return (
     <AppBar sx={{ backgroundColor: "#fff" }}>

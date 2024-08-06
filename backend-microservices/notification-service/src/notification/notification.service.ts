@@ -1,21 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
-import { Server } from 'socket.io';
+import { NotificationGateway } from './notification.gateway';
 
 @Injectable()
-@WebSocketGateway()
 export class NotificationService {
-  @WebSocketServer()
-  server: Server;
+  constructor(private readonly notificationGateway: NotificationGateway) {}
 
   async sendDeadlineNotification(data: {
     userId: string;
     taskId: string;
     title: string;
   }) {
-    this.server.to(data.userId).emit('deadline_notification', {
-      taskId: data.taskId,
-      message: `Task "${data.title}" is due soon!`,
-    });
+    this.notificationGateway.sendDeadlineNotification(data);
   }
 }

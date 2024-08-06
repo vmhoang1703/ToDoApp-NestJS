@@ -10,6 +10,7 @@ export class NotificationController {
   async handleDeadlineNotification(
     @Payload() data: { userId: string; taskId: string; title: string },
   ) {
+    console.log(data);
     await this.notificationService.sendDeadlineNotification(data);
   }
 }
