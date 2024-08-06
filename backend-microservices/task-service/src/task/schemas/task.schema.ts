@@ -19,6 +19,9 @@ export class Task {
 
   @Prop({ required: true, default: 'todo' })
   status: string;
+
+  @Prop({ required: true })
+  deadline: Date;
 }
 
 export const TaskSchema = SchemaFactory.createForClass(Task);
