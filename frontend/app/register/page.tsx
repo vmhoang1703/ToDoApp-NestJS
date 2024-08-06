@@ -15,7 +15,7 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { FormEvent } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -25,10 +25,17 @@ const defaultTheme = createTheme();
 const API_URL = "http://localhost:3000/auth/register";
 
 const SignUp = () => {
+  const [checked, setChecked] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (!checked) {
+      alert("Please agree to the privacy policy before signing up.");
+      return;
+    }
+
     const data = new FormData(event.currentTarget);
 
     try {
@@ -41,6 +48,10 @@ const SignUp = () => {
     } catch (error) {
       console.error("Error creating user:", error);
     }
+  };
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setChecked(event.target.checked);
   };
 
   return (
@@ -92,7 +103,11 @@ const SignUp = () => {
               <Grid item xs={12}>
                 <FormControlLabel
                   control={
-                    <Checkbox value="allowExtraEmails" color="primary" />
+                    <Checkbox
+                      checked={checked}
+                      onChange={handleChange}
+                      inputProps={{ "aria-label": "controlled" }}
+                    />
                   }
                   label="I agree with the privacy."
                 />
@@ -106,17 +121,17 @@ const SignUp = () => {
             >
               Sign Up
             </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link
-                  href="/login"
-                  style={{ textDecoration: "none", fontSize: "15px" }}
-                >
-                  Already have an account? Sign in
-                </Link>
-              </Grid>
-            </Grid>
           </Box>
+          <Grid container justifyContent="flex-end">
+            <Grid item>
+              <Link
+                href="/login"
+                style={{ textDecoration: "none", fontSize: "15px" }}
+              >
+                Already have an account? Sign in
+              </Link>
+            </Grid>
+          </Grid>
         </Box>
       </Container>
     </ThemeProvider>
